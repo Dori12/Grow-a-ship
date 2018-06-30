@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-
     public UIStates uiStates;
+    public Text stageText;
 
     public void EnterUpgrade()
     {
@@ -29,5 +30,11 @@ public class UIManager : MonoBehaviour
     {
         if (UIStates.states.Shop == uiStates.currentState)
             uiStates.ChangeState(UIStates.states.ExitShop);
+    }
+    
+    public void RenewalStageText()
+    {
+        int currentStage = StageManager.Instance._stage;
+        stageText.text = "스테이지 : " + currentStage.ToString();
     }
 }

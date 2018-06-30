@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommonJapanShip : JapanShip
-{
+public class BossJapanShip : JapanShip {
+
 	// Use this for initialization
 	void Start () {
         currentState = states.Arrive;
         _InitPos = transform.position;
+        _animator.GetComponent<Animator>();
     }
-
-    // Update is called once per frame
-    void Update () {
+	
+	// Update is called once per frame
+	void Update () {
         StateActionForUpdate();
 	}
 
@@ -19,13 +20,14 @@ public class CommonJapanShip : JapanShip
     {
         base.StateActionForUpdate();
     }
+
     public override void ArriveAction()
     {
-        hpBar.SetActive(true);
         HPSYSTEM.SetStageHp(StageManager.Instance._stage);
         HPSYSTEM.SetHp();
         SwitchSprite();
         ColorInit();
+        hpBar.SetActive(true);
         currentState = states.Idle;
     }
 
@@ -39,19 +41,21 @@ public class CommonJapanShip : JapanShip
 
     public override void DieAction()
     {
-        hpBar.SetActive(false);
-        if(!StageManager.Instance._isBossStage)
+        if (!StageManager.Instance.isCatchBoss())
         {
-            currentState = states.Arrive;
+            StageManager.Instance.CatchBoss();
         }
+        gameObject.SetActive(false);
     }
 
     public override void DyingAction()
     {
+        hpBar.SetActive(false);
         if (FadeOut())
         {
             currentState = states.Die;
-            StageManager.Instance.CatchEnemy();
         }
     }
+
+    
 }
