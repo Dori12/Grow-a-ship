@@ -5,14 +5,18 @@ using UnityEngine;
 public class KoreaShip : MonoBehaviour {
 
     Sprite bulletSprite;
-    public ResourceManager RESOURCEMANAGER;
+    public ResourceManager _resourceManager;
     public Transform shotPos;
     public GameObject bullet;
 
     public double atk;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        _resourceManager = FindObjectOfType<ResourceManager>();
+    }
+    // Use this for initialization
+    void Start () {
         SelectBulletSprite(3);
 	}
 	
@@ -37,11 +41,13 @@ public class KoreaShip : MonoBehaviour {
 
     void SelectBulletSprite(int i)
     {
-        int num = RESOURCEMANAGER._bulletSprites.Length;
+        int num = _resourceManager._bulletSprites.Length;
+
         if(i > num)
         {
             Debug.LogError("Bullet Num Warning");
         }
-        bulletSprite = RESOURCEMANAGER._bulletSprites[i];
+
+        bulletSprite = _resourceManager._bulletSprites[i];
     }
 }

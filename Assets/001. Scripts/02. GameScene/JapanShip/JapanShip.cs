@@ -6,11 +6,15 @@ using UnityEngine.UI;
 public class JapanShip : MonoBehaviour {
 
     public enum states { Idle, Dying, Die, Arrive }
-    public static Vector2 _InitPos;
-    [SerializeField] protected ResourceManager RESOURCEMANAGER;
+
     [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] protected GameObject hpBar;
     [SerializeField] protected Animator _animator;
+
+    public static Vector2 _InitPos;
+
+    protected ResourceManager _resourceManager;
+    
     public HpSystem HPSYSTEM;
     public float fadeOutSpeed;
     
@@ -18,16 +22,14 @@ public class JapanShip : MonoBehaviour {
     public states currentState;
 
     // Use this for initialization
-    void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    private void Awake()
+    {
+        _resourceManager = FindObjectOfType<ResourceManager>();
     }
 
     public void SwitchSprite()
     {
-        _animator.runtimeAnimatorController = RESOURCEMANAGER._japanAnimator[Random.Range(0, RESOURCEMANAGER._japanAnimator.Length)];
+        _animator.runtimeAnimatorController = _resourceManager._japanAnimator[Random.Range(0, _resourceManager._japanAnimator.Length)];
     }
 
     public virtual void StateActionForUpdate()

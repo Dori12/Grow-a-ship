@@ -6,29 +6,51 @@ public class StageManager : MonoBehaviour
 {
 
     public static StageManager Instance;
-    public int _stage { get; private set; } // 현재 스테이지
-    private int _catchEnemyNumInStage; // 현재 스테이지에서 잡은 적의 수
-    [SerializeField] private int _catchEnemyLimit; // 잡아야할 목표 적의 수
-    public bool _isBossStage { get; private set; } // 현재 보스를 잡는 중인가?
-    [SerializeField] private bool _catchBoss; // 보스를 잡았는가?
-    public bool _isCatchBossFailed { get; private set; } // 현재 진행중인 스테이지의 보스를 잡는데 실패했는가?
-    private float _bossTimer; //보스 타이머
-    [SerializeField] private float _bossTimeLimit; //보스 타임 리미트
-    [SerializeField] private GameObject bossShip;
-    [SerializeField] private GameObject commonShip;
-    [SerializeField] private UIManager UIMANAGER;
 
-    // Use this for initialization
-    void Start()
+    [SerializeField] private int _catchEnemyLimit; // 잡아야할 목표 적의 수
+    [SerializeField] private bool _catchBoss; // 보스를 잡았는가?
+    [SerializeField] private float _bossTimeLimit; //보스 타임 리미트
+    [SerializeField] private GameObject _goBossShip;
+    [SerializeField] private GameObject _goCommonShip;
+    
+
+    public int _stage  // 현재 스테이지
+    {
+        get;
+        private set;
+    }
+
+    public bool _isBossStage  // 현재 보스를 잡는 중인가?
+    {
+        get;
+        private set;
+    }
+    
+    public bool _isCatchBossFailed  // 현재 진행중인 스테이지의 보스를 잡는데 실패했는가?
+    {
+        get;
+        private set;
+    }
+
+    private int _catchEnemyNumInStage; // 현재 스테이지에서 잡은 적의 수
+    private float _bossTimer; //보스 타이머
+    private UIManager _uiManager;
+
+
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
-        _stage = PlayerPrefs.GetInt("_stage", 1);
 
-        UIMANAGER.RenewalStageText();
-        
+        _uiManager = FindObjectOfType<UIManager>();
+    }
+    // Use this for initialization
+    void Start()
+    {
+        _stage = PlayerPrefs.GetInt("_stage", 1);
+        _uiManager.RenewalStageText();
     }
 
     // Update is called once per frame
@@ -49,9 +71,9 @@ public class StageManager : MonoBehaviour
         if (_catchEnemyNumInStage >= _catchEnemyLimit)
         {
             _isBossStage = true;
-            bossShip.SetActive(true);
-            bossShip.GetComponent<JapanShip>().currentState = JapanShip.states.Arrive;
-            commonShip.SetActive(false);
+            _goBossShip.SetActive(true);
+            _goBossShip.GetComponent<JapanShip>().currentState = JapanShip.states.Arrive;
+            _goCommonShip.SetActive(false);
             _bossTimer = _bossTimeLimit;
         }
     }
@@ -61,7 +83,7 @@ public class StageManager : MonoBehaviour
         if (_isBossStage == false)
             return;
 
-        if (bossShip.GetComponent<JapanShip>().currentState == JapanShip.states.Idle)
+        if (_goBossShip.GetComponent<JapanShip>().currentState == JapanShip.states.Idle)
         {
             _bossTimer -= Time.deltaTime;
         }
@@ -72,14 +94,14 @@ public class StageManager : MonoBehaviour
             {
                 BossEnd();
                 _stage++;
-                UIMANAGER.RenewalStageText();
+                _uiManager.RenewalStageText();
                 _isCatchBossFailed = false;
             }
         }
         else
         {
             BossEnd();
-            bossShip.GetComponent<JapanShip>().currentState = JapanShip.states.Dying;
+            _goBossShip.GetComponent<JapanShip>().currentState = JapanShip.states.Dying;
             _isCatchBossFailed = true;
         }
     }
@@ -89,8 +111,8 @@ public class StageManager : MonoBehaviour
         _isBossStage = false;
         _catchBoss = false;
         InitEnemyNum();
-        commonShip.SetActive(true);
-        commonShip.GetComponent<JapanShip>().currentState = JapanShip.states.Arrive;
+        _goCommonShip.SetActive(true);
+        _goCommonShip.GetComponent<JapanShip>().currentState = JapanShip.states.Arrive;
         _bossTimer = 0.0f;
     }
 
