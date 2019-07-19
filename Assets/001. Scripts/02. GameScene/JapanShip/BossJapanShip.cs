@@ -9,6 +9,7 @@ public class BossJapanShip : JapanShip {
         currentState = states.Arrive;
         _InitPos = transform.position;
         _animator.GetComponent<Animator>();
+        _animator.GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
